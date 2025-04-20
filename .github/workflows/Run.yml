@@ -1,28 +1,31 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
+  build:
+    runs-on: ubuntu-latest
 
+    steps:
+      # ১) কোড ক্লোন করুন
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    runs-on: ubuntu-latest
+      # ২) Node.js সেটআপ (v3 এ ক্যাশ অটো‑ম্যানেেজ)
+      - name: Setup Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'          # ~/.npm ক্যাশ হবে
 
-    strategy:
-      matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+      # ৩) ডিপেন্ডেন্সি ইন্সটল
+      - name: Install dependencies
+        run: npm install
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm start
+      # ৪) অ্যাপ স্টার্ট (আপনার স্ক্রিপ্ট অনুযায়ী)
+      - name: Start application
+        run: npm start
